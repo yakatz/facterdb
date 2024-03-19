@@ -41,6 +41,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     host.vm.provision 'shell', inline: '/sbin/shutdown -h now'
   end
   config.vm.define 'ubuntu-18.04-x86_64' do |host|
+    # Get rid of Ubuntu-enabled console log
+    host.vm.provider "virtualbox" do |v|
+      v.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+    end
     host.vm.box = 'ubuntu/bionic64'
     host.vm.provision 'file', source: 'Gemfile', destination: 'Gemfile'
     host.vm.provision 'shell', path: 'get_facts.sh'
